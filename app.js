@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-const MONGO_URI = "mongodb://127.0.0.1:27017/mtech";
+const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/mtech";
 
 mongoose.connect(MONGO_URI).catch((err) => {
   console.error("Initial database connection error:", err);

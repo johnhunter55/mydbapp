@@ -3,25 +3,63 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="style.css" />
     <title>My Restaurants Management</title>
   </head>
   <body>
-    <h1>Welcome to the restaurnt management site</h1>
-    <p>uses api to give u stuff</p>
+    <h1>Restaurant Manager</h1>
+    <p class="subtitle">Discover and manage your favorite culinary spots</p>
     <script>
+      let allRestaurants = [];
+      let currentIndex = 0;
+      const itemsPerPage = 30;
+
+      function renderRestaurants() {
+        const restaurantList = document.getElementById("restaurant-list");
+        const chunk = allRestaurants.slice(
+          currentIndex,
+          currentIndex + itemsPerPage,
+        );
+
+        chunk.forEach((restaurant, index) => {
+          const restaurantItem = document.createElement("div");
+          restaurantItem.className = "restaurant-card";
+          restaurantItem.style.animationDelay = `${index * 0.05}s`;
+          restaurantItem.innerHTML = `
+            <h3>${restaurant.name}</h3>
+            <div class="badge-container">
+              <span class="borough-badge">${restaurant.borough}</span>
+              <span class="cuisine-badge">${restaurant.cuisine}</span>
+            </div>
+          `;
+          restaurantList.appendChild(restaurantItem);
+        });
+
+        currentIndex += itemsPerPage;
+        const loadMoreBtn = document.getElementById("load-more-btn");
+        loadMoreBtn.style.display =
+          currentIndex >= allRestaurants.length ? "none" : "block";
+      }
+
       fetch("/getRestaurants")
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
-          const restaurantList = document.getElementById("restaurant-list");
-          data.forEach((restaurants) => {
-            const restaurantItem = document.createElement("div");
-            restaurantItem.textContent = `Name: ${restaurants.name}, Cuisine: ${restaurants.cuisine}`;
-            restaurantList.appendChild(restaurantItem);
-          });
+          allRestaurants = data;
+          renderRestaurants();
         });
     </script>
-    <div id="restaurant-list"></div>
+    <div class="restaurant-list" id="restaurant-list"></div>
+    <button
+      id="load-more-btn"
+      class="load-more-btn"
+      onclick="renderRestaurants()"
+      style="display: none"
+    >
+      Load More
+    </button>
   </body>
 </html>
