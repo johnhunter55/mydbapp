@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>My Restaurants Management</title>
+  </head>
+  <body>
+    <h1>Welcome to the restaurnt management site</h1>
+    <p>uses api to give u stuff</p>
+    <script>
+      fetch("/getRestaurants")
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          const restaurantList = document.getElementById("restaurant-list");
+          data.forEach((restaurants) => {
+            const restaurantItem = document.createElement("div");
+            restaurantItem.textContent = `Name: ${restaurants.name}, Cuisine: ${restaurants.cuisine}`;
+            restaurantList.appendChild(restaurantItem);
+          });
+        });
+    </script>
+    <div id="restaurant-list"></div>
+  </body>
+</html>
